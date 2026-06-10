@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Text Analysis 2026"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Seminars"
+        menu:
+          - text: "Seminar 1"
+            href: Seminar_1.qmd
+          - text: "Seminar 2"
+            href: Seminar_2.qmd
+          - text: "Seminar 3"
+            href: Seminar_3.qmd
+          - text: "Seminar 4"
+            href: Seminar_4.qmd
+          - text: "Seminar 5"
+            href: Seminar_5.qmd
+          - text: "Seminar 6"
+            href: Seminar_6.qmd
+          - text: "Seminar 7"
+            href: Seminar_7.qmd
+          - text: "简单R入门"
+            href: 简单R入门.qmd
+          - text: "Tidyverse包介绍"
+            href: "Tidyverse 包介绍.qmd"
+          - text: "代码帮助"
+            href: 代码帮助.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

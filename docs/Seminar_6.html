@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>文本作为数据C：词序列 – Text Analysis 2026</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Text Analysis 2026</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-seminars" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Seminars</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-seminars">    
+        <li>
+    <a class="dropdown-item" href="./Seminar_1.html">
+ <span class="dropdown-text">Seminar 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_2.html">
+ <span class="dropdown-text">Seminar 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_3.html">
+ <span class="dropdown-text">Seminar 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_4.html">
+ <span class="dropdown-text">Seminar 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_5.html">
+ <span class="dropdown-text">Seminar 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_6.html">
+ <span class="dropdown-text">Seminar 6</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Seminar_7.html">
+ <span class="dropdown-text">Seminar 7</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./简单R入门.html">
+ <span class="dropdown-text">简单R入门</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tidyverse 包介绍.html">
+ <span class="dropdown-text">Tidyverse包介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./代码帮助.html">
+ <span class="dropdown-text">代码帮助</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#句子与文档嵌入表示" id="toc-句子与文档嵌入表示" class="nav-link active" data-scroll-target="#句子与文档嵌入表示">6.1 句子与文档嵌入表示</a></li>
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">6.2 Packages</a></li>
+  <li><a href="#数据" id="toc-数据" class="nav-link" data-scroll-target="#数据">6.3 数据</a></li>
+  <li><a href="#第一部分词嵌入的聚合" id="toc-第一部分词嵌入的聚合" class="nav-link" data-scroll-target="#第一部分词嵌入的聚合">6.4 第一部分：词嵌入的聚合</a></li>
+  <li><a href="#第二部分基于-sentence-bert-的嵌入表示" id="toc-第二部分基于-sentence-bert-的嵌入表示" class="nav-link" data-scroll-target="#第二部分基于-sentence-bert-的嵌入表示">6.5 第二部分：基于 Sentence-BERT 的嵌入表示</a></li>
+  <li><a href="#第三部分k-means-聚类分析" id="toc-第三部分k-means-聚类分析" class="nav-link" data-scroll-target="#第三部分k-means-聚类分析">6.6 第三部分：K-means 聚类分析</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">文本作为数据C：词序列</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>讲座人：Hanxu hanxu.dong.21@ucl.ac.uk</p>
+<p>⚠️ 注意： 今天的研讨课数据集数量较多，我们会在Seminar 5结束后提供下载方式</p>
+<section id="句子与文档嵌入表示" class="level2">
+<h2 class="anchored" data-anchor-id="句子与文档嵌入表示">6.1 句子与文档嵌入表示</h2>
+<p>在昨天的研讨课中，我们学习了词的稠密向量表示（词嵌入）如何更好地表达词义，可以用于寻找同义词、建立类比模型，以及通过扩展词典来衡量概念的普及程度。本周，我们将生成完整文本序列（句子、段落、文档）的稠密向量表示。这对于诸如文本分类和聚类等任务非常有用，因为这些任务需要为每个文本提供一个单一的向量表示。</p>
+<p>在今天的研讨课中，我们将重点讨论两种方法：词嵌入的聚合以及基于 <code>sentence-BERT</code> 的嵌入。我们将把这些方法应用于讲座中介绍的Twitter语料库的一部分，并利用这些嵌入进行聚类与信息检索。</p>
+</section>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">6.2 Packages</h2>
+<p>在开始研讨会时，先下载/加载以下 R 包：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(text2vec)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#如果你无法加载 stringer 包，请先运行以下代码：</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("stringr")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="数据" class="level2">
+<h2 class="anchored" data-anchor-id="数据">6.3 数据</h2>
+<p>今天的研讨课将依赖于三个数据来源。</p>
+<ul>
+<li><code>GloVe embeddings</code>：你在上周已经使用过这些嵌入，因此可能已经下载。如果尚未下载，可以通过研讨页面顶部的链接获取（下载可能需要几分钟）。</li>
+<li><code>Greenpeace tweets</code>：我们将使用讲座中提到的 Twitter 数据集的一个子集: 2010年至2020年间，Greenpeace英国分部（一家环境抗议与倡导组织）的推文。注意：“seminar data 2” 将下载两个对象:一个<code>R</code>数据文件和一个<code>CSV</code>文件。</li>
+<li><code>Guardian articles</code>：最后，我们将检索该时间段内的新闻文章片段，查找是否存在与Greenpeace主张相呼应的内容。注意：“seminar data 3” 将下载两个<code>R</code>数据文件。</li>
+</ul>
+</section>
+<section id="第一部分词嵌入的聚合" class="level2">
+<h2 class="anchored" data-anchor-id="第一部分词嵌入的聚合">6.4 第一部分：词嵌入的聚合</h2>
+<p>我们将从聚合每个词元的词嵌入开始，为每条推文生成稠密的向量表示。</p>
+<ol type="1">
+<li>加载推文数据和预训练的<code>GloVe</code>嵌入表示：</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"glove_embeddings.Rdata"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"greenpeace_tweets.Rdata"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="2" type="1">
+<li>找出该推文语料库中使用的所有不重复词项（unique words）。为此，首先需要对推文进行分词（可以使用 <code>quanteda</code> 包实现），然后依次使用 <code>unlist()</code> 和 <code>unique()</code> 函数来提取词项类型（word-types）</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>vocab_corpus <span class="ot">&lt;-</span> greenpeace_tweets<span class="sc">$</span>tweet_text <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>(<span class="at">remove_url =</span> <span class="cn">TRUE</span>, <span class="at">remove_punct =</span> <span class="cn">TRUE</span>, <span class="at">remove_symbols =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_tolower</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="3" type="1">
+<li>找出推文语料库中不重复词项集合与<code>GloVe</code>嵌入词汇表之间的交集。 ⚠️注意<code>glove</code>对象的行名（row names）以字符串形式存储词项类型（word-type）。请计算推文语料库中有多少比例的词项属于 “词汇表外”（Out Of Vocabulary, OOV）</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查找GloVe嵌入的词汇表</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>vocab_glove <span class="ot">&lt;-</span> <span class="fu">rownames</span>(glove)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出与语料库词汇的交集</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>vocab_intersection <span class="ot">&lt;-</span> <span class="fu">intersect</span>(vocab_corpus, vocab_glove)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 语料库中有多少个词是词汇表外（OOV）的？</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(vocab_corpus) <span class="sc">-</span> <span class="fu">length</span>(vocab_intersection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 19860  </code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 推特语料库中有多少比例的词项类型是词汇表外（OOV）的？</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> (<span class="fu">length</span>(vocab_intersection) <span class="sc">/</span> <span class="fu">length</span>(vocab_corpus))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 0.5172144</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 哪些类型的词属于词汇表外（OOV）？</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>vocab_corpus[<span class="sc">!</span>(vocab_corpus <span class="sc">%in%</span> vocab_intersection)][<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code> [1] "here's"          "@patrickaryee"   "you're"          "you've"         
+ [5] "@greenpeace"     "we've"           "@watchingmytone" "we'll"          
+ [9] "that's"          "@glass_ambrose" </code></pre>
+<blockquote class="blockquote">
+<p>词汇表外（OOV）的词项类型数量很多！当然，其中很多是用户标签（usertags）和话题标签（hashtags）——但这些仍可能包含有用的信息。使用当前方法构建推文层级嵌入时，若这些词出现在推文中，我们就被迫忽略它们。在这种情形下，我们受限于 GloVe 的词汇表，尽管它非常庞大（40 万词），但仍非穷尽性的。</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>如果我们希望改进这一点，可以考虑以下两种方法： (a) 使用当前语料库训练我们自己的词嵌入（尽管该语料库可能太小，无法为罕见词学习到有意义的表示）； (b) 依赖于支持子词级分词（subword tokenisation）的词嵌入模型，例如FastText</p>
+</blockquote>
+</details>
+<ol start="4" type="1">
+<li>接下来，我们将构建一个与 GloVe 嵌入表示对齐的推文“文档-特征矩阵”（DFM） 你可以按照以下步骤操作：</li>
+</ol>
+<ul>
+<li>对推文进行分词，方式与问题 1 中提取不重复词项时完全一致</li>
+<li>使用 <code>quanteda</code> 包中的 <code>dfm()</code> 函数，基于分词结果创建文档-特征矩阵</li>
+<li>使用 <code>dfm_match()</code> 函数，将 DFM 的列（词项）与 <code>vocab_intersection</code> 对齐</li>
+<li>从 <code>GloVe</code> 矩阵中选取相关行，使其与推文<code>DFM</code>的列一一对应 完成上述步骤后，你的推文<code>DFM</code>的列数应当等于<code>GloVe</code>矩阵的行数。你可以使用 <code>dim()</code> 函数来验证这一点</li>
+</ul>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从推特语料库中创建文档-特征矩阵（DFM）</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>gp_dfm <span class="ot">&lt;-</span> greenpeace_tweets<span class="sc">$</span>tweet_text <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens</span>() <span class="sc">%&gt;%</span>              <span class="co"># 分词</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tokens_tolower</span>() <span class="sc">%&gt;%</span>      <span class="co"># 转为小写</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dfm</span>()                     <span class="co"># 构建 DFM</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 将 DFM 与 vocab_intersection 对齐</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>gp_dfm_matched <span class="ot">&lt;-</span> <span class="fu">dfm_match</span>(gp_dfm, vocab_intersection)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 将 GloVe 嵌入矩阵与词汇交集对齐</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>glove_matched <span class="ot">&lt;-</span> glove[vocab_intersection,]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(glove)  <span class="co"># 释放原始 GloVe 对象的内存</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较 DFM 与嵌入矩阵的维度</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># DFM 的列数应该等于嵌入矩阵的行数！</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(gp_dfm_matched)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 38360 18538  </code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(glove_matched)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 18538   300</code></pre>
+<blockquote class="blockquote">
+<p>好消息：<code>gp_dfm</code> 的列数（即词项类型的数量）等于 <code>glove_matched</code> 的行数。这意味着这两个矩阵是可相容的（conformable）—— 换句话说，它们可以进行矩阵乘法运算。这将在接下来的问题中派上用场</p>
+</blockquote>
+</details>
+<ol start="5" type="1">
+<li>现在，我们将通过聚合词嵌入来生成推文层级的嵌入表示，我们可以通过矩阵乘法来实现这一点。</li>
+</ol>
+<p>从直观上看，我们希望能够计入那些在一条推文中重复出现的词项。因此，与其简单地对某条推文中所有词项类型的嵌入向量求和或取平均，我们更希望对该推文中所有词元（word-tokens）的嵌入向量进行求和/平均。这等同于对词项嵌入执行加权求和或加权平均，其中权重由词项在推文中的出现频率决定。</p>
+<p>如果只有一篇文档和一个嵌入维度，我们可以通过简单地将该文档在 DFM 中的行与嵌入矩阵的对应列相乘来实现这一点，例如：<code>dfm_matched[1,] * glove_matched[,1]</code> 但在包含多个文档和多个嵌入维度的情形下，使用矩阵乘法更为高效：<code>dfm_matched %*% glove_matched</code></p>
+<p>现在运行这段代码，并查看所得对象的维度:</p>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 通过加法计算句子嵌入（sentence embeddings）</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 可通过矩阵乘法实现</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>aggregated_static_emb <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(gp_dfm_matched <span class="sc">%*%</span> glove_matched)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看生成嵌入矩阵的维度</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(aggregated_static_emb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 38360   300</code></pre>
+<blockquote class="blockquote">
+<p>生成的对象包含38,360行（即推文的数量）和300列（即GloVe维度的数量）</p>
+</blockquote>
+</details>
+<ol start="6" type="1">
+<li>现在，通过将每一行除以其自身的模长（magnitude），对嵌入向量进行归一化处理（normalize）。⚠️请注意，向量的模长即是它到原点的欧几里得距离，计算方式为：每个维度上数值的平方和取平方根（即 <code>sqrt(sum(v^2))</code>）若我们希望计算矩阵 <code>m</code> 中每一行的模长，可以使用 <code>rowSums()</code> 函数如下操作：<code>sqrt(rowSums(m^2))</code></li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 对嵌入向量进行归一化处理</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>aggregated_static_emb_normalised <span class="ot">&lt;-</span> aggregated_static_emb<span class="sc">/</span><span class="fu">sqrt</span>(<span class="fu">rowSums</span>(aggregated_static_emb<span class="sc">^</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="7" type="1">
+<li>最后，让我们找出与语料库中第一条推文在语义上最相似的其他推文。 首先，从查看第一条推文内容开始：</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>greenpeace_tweets<span class="sc">$</span>tweet_text[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] "Thinking of eating less meat in the new year? \n \nHere’s some inspiration from 4 world cultures and religions that embrace plant-based eating. 🥕🥦🌶️🌽🍆\n \nhttps://t.co/zj0ESkrNsc"</code></pre>
+<p>现在，计算该推文与语料库中所有其他推文之间的余弦相似度（cosine similarity），方法与昨天讨论的查找最相似词时类似。你将再次使用 <code>text2vec</code> 包中的 <code>sim2()</code> 函数来完成这一计算 最后，提取与目标推文最相似的前 5 条推文:</p>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算第 1 条推文与所有其他推文之间的余弦相似度</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>similarity_to_tweet1 <span class="ot">&lt;-</span> <span class="fu">sim2</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  aggregated_static_emb_normalised[<span class="sc">-</span><span class="dv">1</span>,],                         <span class="co"># 其余推文的嵌入（已归一化）</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(aggregated_static_emb_normalised[<span class="dv">1</span>,], <span class="at">nrow =</span> <span class="dv">1</span>)         <span class="co"># 第 1 条推文的嵌入（作为查询向量）</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取与目标推文最相似的 5 条推文</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>greenpeace_tweets<span class="sc">$</span>tweet_text[<span class="sc">-</span><span class="dv">1</span>][</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(similarity_to_tweet1, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)                 <span class="co"># 相似度降序排序</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>][<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]                                                           <span class="co"># 返回前 5 条</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] "@im_lowkey_loki There's plenty we can all do, from taking part in campaigns to eating less meat and more wonderful plant based food https://t.co/P5W0lX523V 🙂"     
+[2] "@judealdridge Many people around the world rely on meat and fish for protein.  Our campaign encourages everyone to eat less meat, making it more inclusive, and we're focusing on tackling industrial and unsustainable farming rather than consumers. Find out more at https://t.co/EAihtXB4Jw"
+[3] "@MarsDroid1 It's far less efficient to grow crops for farm animal feed than as food for people as this blog and video explains https://t.co/0V1HO3T0i0 so eating less meat and eating a wide range of plant-based food is great for forests and the climate."                                   
+[4] "@MissKay_Geog Our health, the stability of the climate and the future of the world’s forests depends on us eating less meat and dairy. By eating mostly plant based food, we could feed more people with all the calories and nutrition needed for a healthy diet without destroying forests 🌳"
+[5] "Happy #WorldVeganDay 🎉🥦🥑💚🍉🥝🎉\n\nMore and more people in the UK are eating less meat. \nWhether you're doing it to protect the environment, for the animals or for your own health - well done! 👏👏\n\nhttps://t.co/IHYkp3FYOs"                                                  </code></pre>
+<blockquote class="blockquote">
+<p>这些推文是否与目标推文相关？</p>
+</blockquote>
+</details>
+</section>
+<section id="第二部分基于-sentence-bert-的嵌入表示" class="level2">
+<h2 class="anchored" data-anchor-id="第二部分基于-sentence-bert-的嵌入表示">6.5 第二部分：基于 Sentence-BERT 的嵌入表示</h2>
+<p>为了生成 Sentence-BERT 嵌入表示，我们需要访问一个预训练的 Sentence-BERT 模型。最简便的方式是通过 HuggingFace API 获取。明天我们会更详细地讨论这个平台，简而言之，HuggingFace 是一个在线的预训练神经网络模型与数据集的仓库。你可以通过专门设计的 API 来访问这些模型。</p>
+<p>目前，在 R 中尚无良好的实现方式来支持这一过程，因此需要借助少量的 Python 代码。在明天的课程中，我们将讨论一个易于使用的 Python 接口 ——Colab。不过，为了本次研讨课的顺利进行，我们已为你提供了预先计算好的 Sentence-BERT 嵌入向量，你只需在 R 中对其进行分析，无需亲自运行任何 Python 代码。</p>
+<p>不过，为了加深理解，请参考下方的 Python 代码，了解这些嵌入表示是如何生成的：</p>
+<ul>
+<li>第一步（在R中）是将推文导出为CSV文件：</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(greenpeace_tweets, <span class="at">file =</span> <span class="st">"greenpeace_tweets.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">'UTF-8'</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>接下来（在 Python 中），安装并导入以下依赖项（包）：</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pip install pandas</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pip install sentence_transformers</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>下一步，下载你所选择的 Sentence-BERT 模型。正如在讲座中提到的，可供选择的模型有很多，在模型体积、计算速度、在不同数据集上的表现等方面各不相同。在本次研讨课中，我们将使用 <code>all-MiniLM-L6-v2</code> 模型。这是一个运行速度相对较快的模型，同时在生成通用句子嵌入方面表现也相对优异：</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model_preferred <span class="op">=</span> SentenceTransformer(<span class="st">'all-MiniLM-L6-v2'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>现在我们可以将推文导入并使用以下代码将其编码为句子嵌入：</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将推文导入为数据框</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>greenpeace_tweets <span class="op">=</span> pd.read_csv(<span class="st">'greenpeace_tweets.csv'</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取包含推文文本的列</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>tweets <span class="op">=</span> greenpeace_tweets[<span class="st">'tweet_text'</span>]</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 编码为句子嵌入（sentence embeddings）</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>sentence_embeddings <span class="op">=</span> model_preferred.encode(tweets, show_progress_bar <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 导出为 CSV 文件</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(sentence_embeddings).to_csv(<span class="st">'greenpeace_sentence_embeddings.csv'</span>, index<span class="op">=</span><span class="va">False</span>, header<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>一切搞定！我已经提前完成了相关编码，因此你只需直接下载 <code>greenpeace_sentence_embeddings.csv</code> 文件,将预计算好的 Sentence-BERT 嵌入导入到 R 中</p>
+<ol type="1">
+<li>为了提高读取速度，建议使用 <code>data.table</code> 包中的 <code>fread()</code> 函数来导入该 CSV 文件:</li>
+</ol>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sbert_emb <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="at">file =</span> <span class="st">"greenpeace_sentence_embeddings.csv"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sbert_emb <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(sbert_emb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>检查嵌入向量是否已被归一化 我们使用的这一特定 SBERT 模型在生成嵌入时会自动执行归一化处理。但我们仍可以进行验证：通过计算每个向量的模长（magnitude），其结果应当为 1。 你可以复用6.4中问题6的代码来完成这一检查：</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 随机抽取 100 行样本</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sbert_emb_sample <span class="ot">&lt;-</span> sbert_emb[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(sbert_emb), <span class="dv">100</span>),]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每一行向量的模长（magnitude）</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">rowSums</span>(sbert_emb_sample<span class="sc">^</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+  [8] 1.0000001 1.0000000 1.0000001 1.0000000 1.0000000 1.0000000 1.0000000
+ [15] 1.0000000 1.0000001 1.0000000 1.0000000 0.9999999 1.0000000 1.0000000
+ [22] 1.0000001 1.0000000 0.9999999 1.0000000 1.0000000 1.0000000 1.0000000
+ [29] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000001 1.0000000
+ [36] 1.0000000 1.0000000 1.0000001 1.0000000 1.0000000 1.0000000 1.0000001
+ [43] 1.0000000 0.9999999 1.0000000 1.0000001 1.0000000 1.0000000 1.0000000
+ [50] 1.0000001 1.0000000 1.0000000 0.9999999 1.0000000 1.0000001 1.0000000
+ [57] 1.0000000 1.0000000 1.0000000 1.0000000 0.9999999 1.0000000 1.0000000
+ [64] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.9999999
+ [71] 1.0000000 1.0000000 1.0000000 0.9999999 1.0000000 1.0000000 1.0000000
+ [78] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [85] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [92] 1.0000000 1.0000000 1.0000000 1.0000001 1.0000000 1.0000000 1.0000000
+ [99] 1.0000000 1.0000000</code></pre>
+<blockquote class="blockquote">
+<p>所有数值都等于或非常接近 1，这表明嵌入向量确实已经被归一化 (这些微小的偏离是由于数值计算中的细小误差所致)</p>
+</blockquote>
+</details>
+<ol start="3" type="1">
+<li>使用 SBERT 嵌入向量找出与语料库中第一条推文语义最相似的其他推文。 请重复6.4中问题7的步骤，但这次使用的是 <code>sbert_emb</code> 而非聚合后的词嵌入向量 🤔思考：这些结果与使用聚合词嵌入时相比如何？这些推文是否在语义上与第一条推文更加接近？</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查第一条推文</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>greenpeace_tweets<span class="sc">$</span>tweet_text[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] "Thinking of eating less meat in the new year? \n \nHere’s some inspiration from 4 world cultures and religions that embrace plant-based eating. 🥕🥦🌶️🌽🍆\n \nhttps://t.co/zj0ESkrNsc"</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查第一条推文</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算第 1 条推文与其他所有推文之间的余弦相似度（使用 SBERT 嵌入）</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>similarity_to_tweet1_sbert <span class="ot">&lt;-</span> <span class="fu">sim2</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  sbert_emb[<span class="sc">-</span><span class="dv">1</span>,],                                      <span class="co"># 除第 1 条以外的推文嵌入</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(sbert_emb[<span class="dv">1</span>,], <span class="at">nrow =</span> <span class="dv">1</span>)                      <span class="co"># 第 1 条推文的嵌入向量</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取与目标推文最相似的 5 条推文</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>greenpeace_tweets<span class="sc">$</span>tweet_text[<span class="sc">-</span><span class="dv">1</span>][</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(similarity_to_tweet1_sbert, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)   <span class="co"># 按相似度降序排列</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>][<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]                                                   <span class="co"># 返回前 5 条</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] "@VeganChatRoom Greenpeace always encourage people to eat less meat, but we think January is a great time to make a change, especially if the change is good for the planet! 👍"
+[2] "@BradleyAllsop2 we promote eating less meat, sustainable agriculture http://t.co/KZAapXvCQi and wld vegetarian day http://t.co/0ug992U4jL"                                     
+[3] "@im_lowkey_loki There's plenty we can all do, from taking part in campaigns to eating less meat and more wonderful plant based food https://t.co/P5W0lX523V 🙂"                
+[4] "RT @Greenpeace: Happy #WorldVeganDay! Eating a plant-based diet is good for people, animals &amp;amp; the planet. Here are tips for newbies\nhttps:/…"                             
+[5] "@claireperrymp 10: Radically change the farming and food system to encourage a less meat-based diet #ClimateEmergency \n\nhttps://t.co/ewrq3gHj3q"</code></pre>
+<blockquote class="blockquote">
+<p>这些推文相较于使用聚合词嵌入检索的结果，与第一条推文的语义更为接近。两种方法返回的推文都涉及减少肉类摄入这一主题，但使用 SBERT 嵌入时，第一条最相似的推文具体提到了“新年期间少吃肉”，在语境层面上与目标推文的契合度更高</p>
+</blockquote>
+</details>
+</section>
+<section id="第三部分k-means-聚类分析" class="level2">
+<h2 class="anchored" data-anchor-id="第三部分k-means-聚类分析">6.6 第三部分：K-means 聚类分析</h2>
+<p>为了识别 Greenpeace 在该时间段内提出的主要主张，我们现在可以利用句子嵌入表示对推文进行聚类。在讲座中，我们介绍了 k-means 聚类算法。在本节中，我们将使用 R 来实现该算法，并从每个聚类中提取最具“中心性”的推文，作为代表性示例，以便后续人为标注和主题归纳。</p>
+<ol type="1">
+<li>对完整的推文样本应用 k-means 聚类算法。 请使用 R 语言中基础包（base R）提供的 <code>kmeans()</code> 函数来实现。为此，你需要选定一个 k 值（即聚类的数量）:</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># K-means 聚类</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="dv">50</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>kmeans_out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sbert_emb, <span class="at">centers =</span> k, <span class="at">iter.max =</span> <span class="dv">20</span>, <span class="at">nstart =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="2" type="1">
+<li>提取每个聚类中最具中心性的推文 k-means 的一个实用特性是：最靠近聚类质心（centroid）的观测值可被视为该聚类中最具“代表性”的样本。因此，我们可以通过观察这些中心推文来对各个聚类进行人为标签标注。请创建一个长度为 k 的列表，其中每个元素包含该聚类中最靠近质心的 10 条推文：</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出每个聚类中最具中心性的推文</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>most_central <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>k) {</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 提取第 j 个聚类中的嵌入向量</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  cl_emb <span class="ot">&lt;-</span> sbert_emb[kmeans_out<span class="sc">$</span>cluster <span class="sc">==</span> j, ]</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 提取第 j 个聚类中的推文文本</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  cl_text <span class="ot">&lt;-</span> greenpeace_tweets<span class="sc">$</span>tweet_text[kmeans_out<span class="sc">$</span>cluster <span class="sc">==</span> j]</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 计算第 j 个聚类中每条推文与该聚类质心之间的余弦相似度</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  cl_cos <span class="ot">&lt;-</span> <span class="fu">sim2</span>(cl_emb, <span class="fu">matrix</span>(kmeans_out<span class="sc">$</span>centers[j, ], <span class="at">nrow =</span> <span class="dv">1</span>))</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 提取第 j 个聚类中最接近质心的 10 条推文（即最具代表性）</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  most_central[[j]] <span class="ot">&lt;-</span> cl_text[<span class="fu">order</span>(cl_cos, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]]</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<ol start="3" type="1">
+<li>查看聚类结果，尝试为每个聚类归纳出合理的标签 例如：查看第 6 个聚类中最具代表性的推文，进而判断该聚类的核心主题</li>
+</ol>
+<details>
+<summary>
+Reveal Code
+</summary>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>most_central[[<span class="dv">6</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>[1] "Fed up of plastic waste? \n\nTake action against plastic pollution, tell your supermarket to ditch plastic packaging! \n\nAdd your name &amp;gt;&amp;gt; https://t.co/0MXev4T1d3"
+[2] "Great to see @CatherineWest1 @SueHayman1 &amp;amp; 200 other MPs calling on supermarkets to eliminate plastic packaging by 2023. Let's hope they rise to the challenge! #EndOceanPlastics https://t.co/wNOauUk2Hv"                 
+[3] "RT @thisisfreegle: trying to go #PlasticFree\nHow are the Supermarkets doing at tackling the plastic problem?\nCheck out the @greenpeaceuk 20…"                         
+[4] "Thanks to our amazing volunteers around the UK helping #shoppersrevolt against excessive plastic. \n\nIf you shop at @Tesco, @Morrisons , @AldiUK, @LidlUK, @asda, @coopuk, @waitrose @sainsburys  or @marksandspencer - tell them to ditch excessive plastic &amp;gt;&amp;gt; https://t.co/o17QYYuJ8Q https://t.co/7Bko4zJxnm"
+[5] "The usual suspects have made \"zero progress\" on reducing plastic waste! 😡 \n\nThese companies need to show much more ambition to reduce plastic packaging.\n\nhttps://t.co/S5nnEudqSE"                     
+[6] "ICYMI: Our amazing volunteers were around the UK helping #shoppersrevolt against excessive plastic. \n\nIf you shop at @Tesco, @Morrisons , @AldiUK, @LidlUK, @asda, @coopuk, @waitrose @sainsburys  or @marksandspencer - tell them to ditch excessive plastic &amp;gt; https://t.co/o17QYYuJ8Q https://t.co/DpL7xHra3G"  
+[7] "Let's hope next year's word is \"reuse\"! 🤞🐳\n\nSign the petition &amp;amp; tell supermarkets to ditch single-use plastic packaging\n🍎🌽🥦🍌 &amp;gt;&amp;gt; https://t.co/Bacd0VSoPh #EndOceanPlastics https://t.co/vPd9xZyqx6"                                   
+[8] "RT if you agree! Tell supermarkets to ditch pointless plastic packaging &amp;gt;&amp;gt; https://t.co/Vt4aSaKYNh #EndOceanPlastics https://t.co/V1roWJpieY"                 [9] "@SaintSouthside We're targeting companies and Governments too, of course, but we all need to take responsibility for reducing the vast and unsustainable amounts of plastic waste currently produced, including consumers.  Refillable cups &amp;amp; bottles are easily found in supermarkets and pound shops"            
+[10] "After thousands of people took action in-store and online, @sainsburys have promised to reduce their plastic footprint by 50% by 2025.\n\nThis could be a big move in the fight against plastic pollution!\n\n#PeoplePower\n\nMore info&amp;gt; \nhttps://t.co/l4tDcvSBnB"  </code></pre>
+</details>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
