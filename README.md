@@ -1,3 +1,3 @@
 # Text-Analysis-2026
 
-Quarto website source for the Text Analysis 2026 workshop.
+复旦大学哲学学院2026年暑期实践课程（量化文本研究与语言模型）网页
